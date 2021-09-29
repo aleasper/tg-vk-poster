@@ -31,4 +31,3 @@ class VkPublicPoster:
     def post_post(self, msg, attachments=[]):
         attachments_str = ','.join(attachments)
         res = self.vk.wall.post(owner_id=self.group_id, from_group=1, message=msg, attachments=attachments_str)
-        print(res)

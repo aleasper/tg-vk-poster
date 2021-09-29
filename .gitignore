@@ -141,3 +141,6 @@ dmypy.json
 cython_debug/
 
 /media/*
+
+temp_data/
+.temp_data
