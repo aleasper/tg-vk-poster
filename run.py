@@ -22,8 +22,10 @@ def is_acceptable_post(post):
     for stop_regex in stop_regexes:
         if re.match(stop_regex, post['text']) is not None:
             return False
+    if not post['reply_to']:
+        return True
 
-    return True
+    return is_acceptable_post(post['reply_to'])
 
 
 def create_vk_post(vk_client, post, attachments=None, text=None):
@@ -44,7 +46,6 @@ def create_vk_post(vk_client, post, attachments=None, text=None):
         return text, attachments
     else:
         return create_vk_post(vk_client, post['reply_to'], attachments, text)
-
 
 
 async def main(tg_wrapper, vk_client, logger):
