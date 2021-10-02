@@ -34,7 +34,7 @@ def create_vk_post(vk_client, post, attachments=None, text=None):
     if text is None:
         text = post['text']
     else:
-        text = post['text'] + '\n⬇⬇⬇    Обновляю    ⬇⬇⬇\n' + text
+        text = post['text'] + '\n\n⬇⬇⬇    Обновляю    ⬇⬇⬇\n\n' + text
 
     files = os.listdir(f'./media/{post["id"]}')
     atachs_ids = []
