@@ -6,7 +6,7 @@ from os_work import clear_media, get_last_msg_id, save_media
 from tg import Tg
 from creds import app_id, app_hash, app_name
 from settings import vk_group_id, delay
-from ui import get_vk_creds, get_user_channel_select
+from ui import get_vk_creds, get_user_channel_select, cls
 from vk import VkPublicPoster
 import time
 
@@ -16,12 +16,17 @@ stop_regexes = [r'@', r'(http|ftp|https)']
 
 
 def is_acceptable_post(post):
+    print(f'checking: post')
+    pprint(post)
     if post['skip'] or len(post['photos']) == 0 and len(post['text']) == 0:
+        print('SKIP of skip/no content')
         return False
 
     for stop_regex in stop_regexes:
-        if re.match(stop_regex, post['text']) is not None:
+        if len(re.findall(stop_regex, post['text'])) != 0:
+            print('skip of stop_regexes')
             return False
+
     if not post['reply_to']:
         return True
 
@@ -59,6 +64,7 @@ async def main(tg_wrapper, vk_client, logger):
     default_posts_amount = 10
     first_iteration = False
     while True:
+        cls()
         print('___________________')
         print('Start new iteration')
         logger.debug('Main loop started')
@@ -95,12 +101,14 @@ async def main(tg_wrapper, vk_client, logger):
             logger.error(ex)
 
         finally:
+            clear_media()
             logger.debug('End iteration')
             print(f'Sleeping {delay} seconds')
             time.sleep(delay)
 
 
 if __name__ == '__main__':
+    print(re.findall(r'(http|ftp|https)', 'Но нам, кстати , и вчера удалось заработать даже в лонг 😆 t.me/rezinv'))
     logger = get_logger()
     logger.debug('App started')
 

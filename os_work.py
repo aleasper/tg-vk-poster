@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from pprint import pprint
 from shutil import rmtree
 import os
 
@@ -38,7 +39,15 @@ def get_last_msg_id(dialog_id):
 
 async def save_media(client, posts):
     for i, post in enumerate(posts):
+        print('______')
+        print('saving media for:')
+        pprint(posts)
         if not os.path.exists(f'./media/{post["id"]}'):
             os.makedirs(f'./media/{post["id"]}')
         for img in post['photos']:
             await client.download_media(img, f'./media/{post["id"]}')
+        if not post['reply_to']:
+            print('not found reply')
+            print('______')
+            return
+        return await save_media(client, [post['reply_to']])

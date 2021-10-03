@@ -1,7 +1,7 @@
 import copy
 
 from telethon import TelegramClient
-from telethon.tl.types import MessageEntityTextUrl
+from telethon.tl.types import MessageEntityTextUrl, MessageMediaPoll
 
 from os_work import save_last_id
 
@@ -34,10 +34,12 @@ class Tg:
         save_last_id(dialog_id, current_last_id)
 
     async def get_post_from_msg(self, message):
-        post = copy.deepcopy({'id': message.id, 'text': '', 'photos': [], 'videos': [], 'skip': False, 'reply_to': {}})
 
+        print(message)
+
+        post = copy.deepcopy({'id': message.id, 'text': '', 'photos': [], 'videos': [], 'skip': False, 'reply_to': {}})
         for entity, text in message.get_entities_text():
-            if isinstance(entity, MessageEntityTextUrl):
+            if isinstance(entity, MessageEntityTextUrl) or isinstance(entity, MessageMediaPoll):
                 post['skip'] = True
                 return post
 

@@ -1,5 +1,10 @@
 from getpass import getpass
 
+import os
+
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
+
 def get_vk_creds():
     login = input('Enter VK login: ')
     password = getpass('Enter VK password: ')
