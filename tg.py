@@ -93,8 +93,5 @@ class Tg:
             posts[index]['text'] = posts[index]['text']+post['text']
             posts[index]['photos'] = [*posts[index]['photos'], *post['photos']]
             posts[index]['reply_to'] = dict(posts[index]['reply_to'], **post['reply_to'])
-            print('//////')
-            print(posts[index])
-            print('//////')
 
         return posts

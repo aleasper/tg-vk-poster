@@ -34,19 +34,24 @@ def is_acceptable_post(post):
 
 
 def create_vk_post(vk_client, post, attachments=None, text=None):
+    logger.debug(f'Creating post: {post}')
     if attachments is None:
         attachments = []
     if text is None:
         text = post['text']
     else:
         text = post['text'] + '\n\n⬇⬇⬇    Обновляю    ⬇⬇⬇\n\n' + text
-
-    files = os.listdir(f'./media/{post["id"]}')
-    atachs_ids = []
-    for file in files:
-        ph_id, ph_owner_id = vk_client.upload_photo(f'./media/{post["id"]}/{file}')
-        atachs_ids.append({'ph_id': ph_id, 'ph_owner_id': ph_owner_id})
-    attachments = [*attachments, *[f'photo{at_id["ph_owner_id"]}_{at_id["ph_id"]}' for at_id in atachs_ids]]
+    try:
+        files = os.listdir(f'./media/{post["id"]}')
+        atachs_ids = []
+        for file in files:
+            ph_id, ph_owner_id = vk_client.upload_photo(f'./media/{post["id"]}/{file}')
+            atachs_ids.append({'ph_id': ph_id, 'ph_owner_id': ph_owner_id})
+        attachments = [*attachments, *[f'photo{at_id["ph_owner_id"]}_{at_id["ph_id"]}' for at_id in atachs_ids]]
+    except Exception as ex:
+        logger.debug(f'{ex} while reading ./media/{post["id"]}, {post}')
+        pass
+    
     if not post['reply_to']:
         return text, attachments
     else:
@@ -82,20 +87,13 @@ async def main(tg_wrapper, vk_client, logger):
 
             print('Uploading posts...')
             for i, post in reversed(list(enumerate(posts))):
-                print(post)
                 if not is_acceptable_post(post):
                     continue
                 text, attachments = create_vk_post(vk_client, post)
-                print('____')
-                print('post:')
-                print(text)
-                print(attachments)
-                print('____')
                 res = vk_client.post_post(text, attachments)
                 print(f'Post published: {res}')
                 logger.debug(f'Post published: {res}')
             logger.debug('Posts published')
-            print('Sleep...')
         except Exception as ex:
             print(ex)
             logger.error(ex)
