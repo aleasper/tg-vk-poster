@@ -49,5 +49,5 @@ async def save_media(client, posts):
         if not post['reply_to']:
             print('not found reply')
             print('______')
-            return
-        return await save_media(client, [post['reply_to']])
+            continue
+        await save_media(client, [post['reply_to']])

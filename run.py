@@ -12,7 +12,7 @@ import time
 
 import re
 
-stop_regexes = [r'@', r'(http|ftp|https)']
+stop_regexes = [r'@', r'(http|ftp|https)', r'лотерея', 'Реклама', 'реклама']
 
 
 def is_acceptable_post(post):
@@ -51,7 +51,7 @@ def create_vk_post(vk_client, post, attachments=None, text=None):
     except Exception as ex:
         logger.debug(f'{ex} while reading ./media/{post["id"]}, {post}')
         pass
-    
+
     if not post['reply_to']:
         return text, attachments
     else:
