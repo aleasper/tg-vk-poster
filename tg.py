@@ -43,7 +43,7 @@ class Tg:
                 post['skip'] = True
                 return post
 
-        if message.video or message.fwd_from:
+        if message.video or message.fwd_from or message.reply_markup:
             post['skip'] = True
             return post
         if message.message:
@@ -69,7 +69,7 @@ class Tg:
         first = True
         current_last_id = last_id
         async for message in self.client.iter_messages(dialog):
-
+            print(message)
             if message.id > current_last_id:
                 current_last_id = message.id
 

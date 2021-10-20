@@ -12,7 +12,7 @@ import time
 
 import re
 
-stop_regexes = [r'@', r'(http|ftp|https)', r'лотерея', 'Реклама', 'реклама']
+stop_regexes = [r'@', r'(http|ftp|https)', r'лотерея', 'Реклама', 'реклама', r'(t.me|telegram.org|telegram.com)']
 
 
 def is_acceptable_post(post):

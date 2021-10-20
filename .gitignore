@@ -151,3 +151,5 @@ cython_debug/
 
 temp_data/
 .temp_data
+
+settings.py
