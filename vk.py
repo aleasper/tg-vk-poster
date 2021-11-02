@@ -10,7 +10,7 @@ class VkPublicPoster:
 
     def __init__(self, login, password, group_id, logger):
         self.vk_session = vk_api.VkApi(login, password, auth_handler=auth_vk_handler, app_id=app_id)
-        self.vk_session.auth()
+        self.vk_session.auth(token_only=True)
         self.vk = self.vk_session.get_api()
         self.user_id = self.vk.users.get()[0]['id']
         self.group_id = group_id
