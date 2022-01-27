@@ -8,4 +8,4 @@ rsa==4.7.2
 six==1.16.0
 Telethon==1.23.0
 urllib3==1.26.7
-vk-api==11.9.5
+vk-api==11.9.7
