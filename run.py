@@ -58,6 +58,18 @@ def create_vk_post(vk_client, post, attachments=None, text=None):
         return create_vk_post(vk_client, post['reply_to'], attachments, text)
 
 
+errors = []
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 async def main(tg_wrapper, vk_client, logger):
     clear_media()
     await tg.start()
@@ -72,6 +84,9 @@ async def main(tg_wrapper, vk_client, logger):
         cls()
         print('___________________')
         print('Start new iteration')
+        if len(errors) > 0:
+            print(f"\n{bcolors.FAIL}Warning: errors occurred at previous iterations{bcolors.ENDC}")
+            print(f"{bcolors.FAIL}{errors}{bcolors.ENDC}\n")
         logger.debug('Main loop started')
         try:
             posts_amount = default_posts_amount
@@ -81,21 +96,23 @@ async def main(tg_wrapper, vk_client, logger):
             print('Downloading posts...')
             last_msg_id = get_last_msg_id(dialog.id)
             posts = await tg.get_posts(dialog, posts_amount, last_msg_id)
-            pprint(posts)
 
             await save_media(tg_client, posts)
 
             print('Uploading posts...')
+
             for i, post in reversed(list(enumerate(posts))):
                 if not is_acceptable_post(post):
                     continue
                 text, attachments = create_vk_post(vk_client, post)
                 res = vk_client.post_post(text, attachments)
-                print(f'Post published: {res}')
                 logger.debug(f'Post published: {res}')
+
             logger.debug('Posts published')
+
         except Exception as ex:
-            print(ex)
+            print(f"{bcolors.FAIL}{ex}{bcolors.ENDC}\n\n")
+            errors.append(ex.__str__())
             logger.error(ex)
 
         finally:

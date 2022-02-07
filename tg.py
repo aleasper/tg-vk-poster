@@ -34,9 +34,6 @@ class Tg:
         save_last_id(dialog_id, current_last_id)
 
     async def get_post_from_msg(self, message):
-
-        print(message)
-
         post = copy.deepcopy({'id': message.id, 'text': '', 'photos': [], 'videos': [], 'skip': False, 'reply_to': {}})
         for entity, text in message.get_entities_text():
             if isinstance(entity, MessageEntityTextUrl) or isinstance(entity, MessageMediaPoll):
@@ -69,7 +66,6 @@ class Tg:
         first = True
         current_last_id = last_id
         async for message in self.client.iter_messages(dialog):
-            print(message)
             if message.id > current_last_id:
                 current_last_id = message.id
 
