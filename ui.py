@@ -1,13 +1,21 @@
 from getpass import getpass
 
+import json
 import os
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def get_vk_creds():
-    login = input('Enter VK login: ')
-    password = getpass('Enter VK password: ')
+    creds = None
+    with open('./vk_creds.json', "r") as write_file:
+        creds = json.load(write_file)
+    login = creds['login']
+    password = creds['password']
+    if creds['login'] is None or len(creds['login']) == 0:
+        login = input('Enter VK login: ')
+    if creds['password'] is None or len(creds['password']) == 0:
+        password = getpass('Enter VK password: ')
     return login, password
 
 def auth_vk_handler():
